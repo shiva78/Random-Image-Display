@@ -1,0 +1,97 @@
+﻿@model RandomImage.Models.Preference
+
+@{
+    Layout = null;
+    string image = "";
+    if (ViewBag.Images != null)
+    {
+        var images = ViewBag.Images;
+        int count = images.Count;
+        Random random = new Random();
+        image = "/Images/" + images[random.Next(0, count)];
+    }
+
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link href="~/Stylesheets/Site.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var storedName = sessionStorage.getItem("username");
+            if (storedName != null)
+            {
+                doFunction(storedName);
+            }
+            $('#process').click(function () {
+                var username = $('#txtUsername').val();
+                if ($.trim(username) != '') {
+                    doFunction(username);
+                    sessionStorage.setItem("username", username);
+                }
+            });
+            function doFunction(username) {
+                $('#login').css('display', 'none');
+                $('#imageDisplay').css('display', 'block');
+                $('#username').val(username);
+                $('#displayHistory').val(username)
+            }
+        });
+    </script>
+    <div class="container">
+        <div id="login" style="display: block;">
+            <p>Please enter your name to record.</p>
+            <input type="text" id="txtUsername" /><br /><br />
+            <input type="button" value="Display image" id="process" class="btn btn-default" />
+        </div>
+        <div id="imageDisplay" style="display: none;">
+            @using (Html.BeginForm())
+            {
+                <img style="width: 500px;" src="@image" /><br />
+                @Html.AntiForgeryToken()
+                <div class="form-horizontal">
+                    @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control", @id = "username" } })
+                    @Html.EditorFor(model => model.Image, new { htmlAttributes = new { @class = "form-control", @Value = image } })
+                    <div class="form-group" style="margin-top: 10px; margin-bottom: 10px;">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" name="answer" value="Like" class="btn btn-default" />
+                            <input type="submit" name="answer" value="Dislike" class="btn btn-default" /><br /><br />
+                            <input class="btn btn-default" type='button' onclick='location.reload();' value='Request another image' />
+                            <input type="submit" name="answer" value="Display History" class="btn btn-default" />
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+        <div class="historyDisplay">
+            @if (ViewBag.HistoryData != null)
+            {
+                foreach (var history in ViewBag.HistoryData)
+                {
+                    <div class="outerDiv">
+                        <div class="innerDiv">
+                            <img src="@history.Image" />
+                            <p>@history.User_Preferences</p>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p>@ViewBag.NoHistory</p>
+            }
+
+        </div>
+    </div>
+</body>
+</html>

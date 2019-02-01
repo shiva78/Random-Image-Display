@@ -1,0 +1,34 @@
+﻿body {
+    margin: 0;
+}
+.container {
+    width: 500px;
+    margin: 0 auto;
+    overflow: auto;
+}
+.historyDisplay {
+    width: 100%;
+    overflow: auto;
+}
+.outerDiv {
+    width: 50%;
+    float: left;
+    margin-bottom: 10px;
+}
+.innerDiv {
+    width: 95%;
+    margin: 0 auto;
+    background-color: rgb(26,189,201);
+    color: white;
+    text-align: center;
+}
+.innerDiv img {
+    width: 100%;
+}
+.innerDiv p {
+    margin: 0;
+    padding: 5px;
+}
+.form-control {
+    display: none;
+}
